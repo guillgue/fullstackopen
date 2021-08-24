@@ -1,0 +1,16 @@
+note over browser:
+When the button save is pressed the js-code:
+1) add the new note to the notes array
+2) redraw the "notes" DOM element
+3) send a post request to the server
+end note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over browser:
+Content-type: application/json
+Request payload:
+{"content":"new note","date":"2021-08-24T09:38:11.393Z"}
+end note
+
+server-->browser: HTTP status code 201 (created)
