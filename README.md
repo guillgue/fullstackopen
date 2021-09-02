@@ -2,7 +2,7 @@
 
 ## time tracking
 
-- part1: 11
+- part1: 12
 
 ## Ressources to study
 
