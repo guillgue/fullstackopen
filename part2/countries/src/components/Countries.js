@@ -1,7 +1,7 @@
 import React from 'react'
 import Country from './Country'
 
-const Countries = ({list}) => {
+const Countries = ({list, handleClick}) => {
     if (list.length > 10) {
         return (
             <div>
@@ -25,8 +25,9 @@ const Countries = ({list}) => {
             {list.map(country =>
                 <Country
                     key={country.name}
-                    country={country} 
-                    full={false} 
+                    country={country}
+                    full={false}
+                    handleClick={handleClick}
                 />
             )}
         </div>

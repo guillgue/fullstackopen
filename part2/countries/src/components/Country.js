@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Country = ({ country, full }) => {
+const Country = ({ country, full, handleClick }) => {
     if (full) {
         return (
             <div>
@@ -30,6 +30,9 @@ const Country = ({ country, full }) => {
     return (
         <div>
             {country.name}
+            <button name={country.name} onClick={handleClick}>
+                show
+            </button>
         </div>
     )
 }
