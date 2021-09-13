@@ -1,5 +1,6 @@
 import React from 'react'
 import Country from './Country'
+import CountryFull from './CountryFull'
 
 const Countries = ({list, handleClick}) => {
     if (list.length > 10) {
@@ -17,7 +18,7 @@ const Countries = ({list, handleClick}) => {
     }
     else if (list.length === 1) {
         return (
-            <Country country={list[0]} full={true} />
+            <CountryFull country={list[0]} />
         )
     }
     return (
@@ -26,7 +27,6 @@ const Countries = ({list, handleClick}) => {
                 <Country
                     key={country.name}
                     country={country}
-                    full={false}
                     handleClick={handleClick}
                 />
             )}
