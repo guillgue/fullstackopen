@@ -7,14 +7,14 @@ import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
-  const [ searchTerm, setSearchTerm ] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredPersons = searchTerm === '' ?
-    persons :
-    persons.filter(
-      person => 
+  const filteredPersons = searchTerm === ''
+    ? persons
+    : persons.filter(
+      person =>
         person.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
 
@@ -33,7 +33,7 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault()
     if (persons.map(p => p.name).includes(newName)) {
-      alert(`${newName} is already added to phonebook`)
+      window.alert(`${newName} is already added to phonebook`)
     } else {
       const personObject = {
         name: newName,
@@ -67,12 +67,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter 
-        value={searchTerm} 
+      <Filter
+        value={searchTerm}
         handleChange={handleSearchTermChange}
       />
       <h3>add a new</h3>
-      <PersonForm 
+      <PersonForm
         name={newName}
         number={newNumber}
         handleName={handleNameChange}
