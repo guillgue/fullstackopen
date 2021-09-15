@@ -4,11 +4,11 @@ import axios from 'axios'
 import Countries from './components/Countries'
 import SearchField from './components/SearchField'
 
-function App() {
-  const [ countries, setCountries ] = useState([])
-  const [ search, setSearch ] = useState('')
+function App () {
+  const [countries, setCountries] = useState([])
+  const [search, setSearch] = useState('')
 
-  const filteredCountries = countries.filter(country => 
+  const filteredCountries = countries.filter(country =>
     country.name.toLowerCase().includes(search.toLowerCase())
   )
 
