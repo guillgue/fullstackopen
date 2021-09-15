@@ -49,6 +49,13 @@ const App = () => {
     }
   }
 
+  const deletePerson = id => {
+    personService
+      .del(id).then(returnedPerson => {
+        setPersons(persons.filter(n => n.id !== id))
+      })
+  }
+
   useEffect(() => {
     personService
       .getAll()
@@ -73,7 +80,7 @@ const App = () => {
         handleSubmit={addPerson}
       />
       <h3>Numbers</h3>
-      <Persons personList={filteredPersons} />
+      <Persons personList={filteredPersons} handleDelete={deletePerson} />
     </div>
   )
 }
