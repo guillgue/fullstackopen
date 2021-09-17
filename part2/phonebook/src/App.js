@@ -4,12 +4,14 @@ import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [message, setMessage] = useState(null)
 
   const filteredPersons = searchTerm === ''
     ? persons
@@ -48,6 +50,16 @@ const App = () => {
           ))
           setNewName('')
           setNewNumber('')
+          if (message !== null) {
+            clearTimeout(message.timeoutID)
+          }
+          const timeoutID = setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          setMessage({
+            timeoutID,
+            text: `Updated ${returnedPerson.name}`
+          })
         })
     } else if (p === undefined) {
       const personObject = {
@@ -60,6 +72,16 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          if (message !== null) {
+            clearTimeout(message.timeoutID)
+          }
+          const timeoutID = setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          setMessage({
+            timeoutID,
+            text: `Added ${returnedPerson.name}`
+          })
         })
     }
   }
@@ -67,7 +89,18 @@ const App = () => {
   const deletePerson = id => {
     personService
       .del(id).then(() => {
-        setPersons(persons.filter(n => n.id !== id))
+        const { name: deletedName } = persons.find(p => p.id === id)
+        setPersons(persons.filter(p => p.id !== id))
+        if (message !== null) {
+          clearTimeout(message.timeoutID)
+        }
+        const timeoutID = setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+        setMessage({
+          timeoutID,
+          text: `deleted ${deletedName}`
+        })
       })
   }
 
@@ -82,6 +115,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} />
       <Filter
         value={searchTerm}
         handleChange={handleSearchTermChange}

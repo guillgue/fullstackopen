@@ -4,14 +4,14 @@ const PersonForm =
   ({ name, number, handleName, handleNumber, handleSubmit }) => (
     <form onSubmit={handleSubmit}>
       <div>
-        name:
+        name:&nbsp;
         <input
           value={name}
           onChange={handleName}
         />
       </div>
       <div>
-        number:
+        number:&nbsp;
         <input
           value={number}
           onChange={handleNumber}
