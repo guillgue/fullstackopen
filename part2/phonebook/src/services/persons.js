@@ -20,4 +20,6 @@ const del = id => {
   return axios.delete(`${baseUrl}/${id}`)
 }
 
-export default { getAll, create, update, del }
+const personService = { getAll, create, update, del }
+
+export default personService

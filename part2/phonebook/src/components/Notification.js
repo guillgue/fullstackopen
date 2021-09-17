@@ -15,6 +15,10 @@ const Notification = ({ message }) => {
     marginBottom: 10
   }
 
+  if (message.error) {
+    notificationStyle.color = 'red'
+  }
+
   return (
     <div style={notificationStyle}>
       {message.text}

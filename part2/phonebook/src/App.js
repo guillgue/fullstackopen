@@ -58,8 +58,23 @@ const App = () => {
           }, 5000)
           setMessage({
             timeoutID,
-            text: `Updated ${returnedPerson.name}`
+            text: `Updated ${returnedPerson.name}`,
+            error: false
           })
+        })
+        .catch(() => {
+          if (message !== null) {
+            clearTimeout(message.timeoutID)
+          }
+          const timeoutID = setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          setMessage({
+            timeoutID,
+            text: `${personObject.name} was already deleted from server`,
+            error: true
+          })
+          setPersons(persons.filter(p => p.id !== personObject.id))
         })
     } else if (p === undefined) {
       const personObject = {
@@ -80,16 +95,17 @@ const App = () => {
           }, 5000)
           setMessage({
             timeoutID,
-            text: `Added ${returnedPerson.name}`
+            text: `Added ${returnedPerson.name}`,
+            error: false
           })
         })
     }
   }
 
   const deletePerson = id => {
+    const { name: deletedName } = persons.find(p => p.id === id)
     personService
       .del(id).then(() => {
-        const { name: deletedName } = persons.find(p => p.id === id)
         setPersons(persons.filter(p => p.id !== id))
         if (message !== null) {
           clearTimeout(message.timeoutID)
@@ -99,8 +115,23 @@ const App = () => {
         }, 5000)
         setMessage({
           timeoutID,
-          text: `deleted ${deletedName}`
+          text: `deleted ${deletedName}`,
+          error: false
         })
+      })
+      .catch(() => {
+        if (message !== null) {
+          clearTimeout(message.timeoutID)
+        }
+        const timeoutID = setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+        setMessage({
+          timeoutID,
+          text: `${deletedName} was already deleted from server`,
+          error: true
+        })
+        setPersons(persons.filter(p => p.id !== id))
       })
   }
 
