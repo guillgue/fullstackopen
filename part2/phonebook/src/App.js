@@ -99,6 +99,19 @@ const App = () => {
             error: false
           })
         })
+        .catch((err) => {
+          if (message !== null) {
+            clearTimeout(message.timeoutID)
+          }
+          const timeoutID = setTimeout(() => {
+            setMessage(null)
+          }, 5000)
+          setMessage({
+            timeoutID,
+            text: err.response.data.error,
+            error: true
+          })
+        })
     }
   }
 
