@@ -62,7 +62,7 @@ const App = () => {
             error: false
           })
         })
-        .catch(() => {
+        .catch((error) => {
           if (message !== null) {
             clearTimeout(message.timeoutID)
           }
@@ -71,10 +71,9 @@ const App = () => {
           }, 5000)
           setMessage({
             timeoutID,
-            text: `${personObject.name} was already deleted from server`,
+            text: error.response.data.error,
             error: true
           })
-          setPersons(persons.filter(p => p.id !== personObject.id))
         })
     } else if (p === undefined) {
       const personObject = {
@@ -99,7 +98,7 @@ const App = () => {
             error: false
           })
         })
-        .catch((err) => {
+        .catch((error) => {
           if (message !== null) {
             clearTimeout(message.timeoutID)
           }
@@ -108,7 +107,7 @@ const App = () => {
           }, 5000)
           setMessage({
             timeoutID,
-            text: err.response.data.error,
+            text: error.response.data.error,
             error: true
           })
         })
@@ -132,7 +131,7 @@ const App = () => {
           error: false
         })
       })
-      .catch(() => {
+      .catch((error) => {
         if (message !== null) {
           clearTimeout(message.timeoutID)
         }
@@ -141,7 +140,7 @@ const App = () => {
         }, 5000)
         setMessage({
           timeoutID,
-          text: `${deletedName} was already deleted from server`,
+          text: error.response.data.error,
           error: true
         })
         setPersons(persons.filter(p => p.id !== id))
