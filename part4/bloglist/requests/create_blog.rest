@@ -1,12 +1,18 @@
-GET http://localhost:3003/api/blogs
+GET http://localhost:3001/api/blogs
 
 ###
-POST http://localhost:3003/api/blogs
+POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "My Blog",
+  "title": "Hello World",
   "author": "Mr Myself",
   "url": "http://localhost:3003",
-  "likes": "hello"
+  "likes": 4
 }
+
+###
+GET http://localhost:3001/api/blogs/61938304d0a74b2e93cdb362
+
+###
+DELETE http://localhost:3001/api/blogs/61938304d0a74b2e93cdb362
