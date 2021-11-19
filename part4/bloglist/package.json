@@ -7,16 +7,21 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "deploy": "cd ../.. && git subtree push --prefix part4/bloglist/ heroku-bloglist master",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --verbose"
   },
   "author": "Guillaume Guégan",
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "jest": "^27.3.1",
+    "nodemon": "^2.0.15",
+    "standard": "^16.0.4"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.13"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
