@@ -41,9 +41,31 @@ const mostBlogs = (blogs) => {
   return Array.from(totalBlogs).reduce(reducer, { blogs: 0 })
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return undefined
+  }
+
+  const totalBlogs = new Map()
+  blogs.forEach(({ author, likes }) => {
+    totalBlogs.has(author)
+      ? totalBlogs.set(author, totalBlogs.get(author) + likes)
+      : totalBlogs.set(author, likes)
+  })
+
+  const reducer = (acc, [key, value]) => {
+    return acc.likes <= value
+      ? { author: key, likes: value }
+      : acc
+  }
+
+  return Array.from(totalBlogs).reduce(reducer, { likes: 0 })
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
