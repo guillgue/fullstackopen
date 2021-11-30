@@ -71,11 +71,31 @@ test('a specific blog is within the returned blogs', async () => {
   )
 })
 
-test('the identifier of the blogs is named id', async () => {
+test('the identifier of blogs is named id', async () => {
   const response = await api.get('/api/blogs')
   const blog = response.body[0]
   expect(blog.id).toBeDefined()
   expect(blog._id).toBeUndefined()
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Cooking for Beginners',
+    author: 'Mega Cook',
+    url: 'https://cookingiseasy.com',
+    likes: 100
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length + 1)
+  response.body.map(b => delete b.id)
+  expect(response.body).toContainEqual(newBlog)
 })
 
 afterAll(() => {
