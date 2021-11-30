@@ -98,6 +98,23 @@ test('a valid blog can be added', async () => {
   expect(response.body).toContainEqual(newBlog)
 })
 
+test('no likes property in a post request makes it default to 0', async () => {
+  const newBlog = {
+    title: 'Cooking for Beginners',
+    author: 'Mega Cook',
+    url: 'https://cookingiseasy.com'
+  }
+
+  let response = await api.post('/api/blogs').send(newBlog)
+  const id = response.body.id
+  response = await api.get(`/api/blogs/${id}`)
+  expect(response.body).toEqual({
+    ...newBlog,
+    likes: 0,
+    id
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
