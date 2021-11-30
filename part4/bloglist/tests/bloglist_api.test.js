@@ -115,6 +115,36 @@ test('no likes property in a post request makes it default to 0', async () => {
   })
 })
 
+test('blog without url is not added', async () => {
+  const newBlog = {
+    title: 'Cooking for Beginners',
+    author: 'Mega Cook'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
+})
+
+test('blog without title is not added', async () => {
+  const newBlog = {
+    author: 'Mega Cook',
+    url: 'https://cookingiseasy.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
