@@ -71,6 +71,13 @@ test('a specific blog is within the returned blogs', async () => {
   )
 })
 
+test('the identifier of the blogs is named id', async () => {
+  const response = await api.get('/api/blogs')
+  const blog = response.body[0]
+  expect(blog.id).toBeDefined()
+  expect(blog._id).toBeUndefined()
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
