@@ -41,6 +41,37 @@ describe('when there is initially some blogs saved', () => {
   })
 })
 
+describe('viewing a specific blog', () => {
+  test('succeeds with a valid id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
+    const blogToView = blogsAtStart[0]
+
+    const response = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toEqual(blogToView)
+  })
+
+  test('fails with 404 if id valid but not existing', async () => {
+    const nonExistingId = await helper.nonExistingId()
+
+    await api
+      .get(`/api/blogs/${nonExistingId}`)
+      .expect(404)
+  })
+
+  test('fails with 400 if id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api
+      .get(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
 describe('addition of a new blog', () => {
   test('succeeds with complete data', async () => {
     const newBlog = {
@@ -147,6 +178,49 @@ describe('deletion of a blog', () => {
     const invalidId = 'a3459bcde34'
     await api
       .delete(`/api/blogs/${invalidId}`)
+      .expect(400)
+  })
+})
+
+describe('modification of a blog', () => {
+  test('succeeds with valid data, id and existing id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToModify = blogsAtStart[0]
+    const newLikes = blogToModify.likes + 1
+
+    const response = await api
+      .put(`/api/blogs/${blogToModify.id}`)
+      .send({ likes: newLikes, author: 'not modified', url: 'not modified', title: 'not modified' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    expect(response.body).toEqual({ ...blogToModify, likes: newLikes })
+
+    const blogInDb = await helper.specificBlogInDb(blogToModify.id)
+
+    expect(blogInDb).toEqual({ ...blogToModify, likes: newLikes })
+  })
+
+  test('fails with 400 if no likes field in body', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToModify = blogsAtStart[0]
+
+    await api
+      .put(`/api/blogs/${blogToModify.id}`)
+      .send({ author: 'not modified', url: 'not modified', title: 'not modified' })
+      .expect(400)
+
+    const blogInDb = await helper.specificBlogInDb(blogToModify.id)
+
+    expect(blogInDb).toEqual(blogToModify)
+  })
+
+  test('fails with 400 if id is invalid', async () => {
+    const invalidId = '5a3d5da59070081a82a3445'
+
+    await api
+      .put(`/api/blogs/${invalidId}`)
+      .send({ likes: 12 })
       .expect(400)
   })
 })
