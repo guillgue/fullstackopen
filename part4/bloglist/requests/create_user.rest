@@ -7,5 +7,15 @@ Content-Type: application/json
 {
   "username": "coucou",
   "name": "Alfred Robert",
-  "password": "mot de passe super secret"
+  "password": "mot de passe super"
+}
+
+###
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "alfredo",
+  "name": "Alfred Robert",
+  "password": "mot de passe secret"
 }

@@ -2,10 +2,12 @@
 
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -222,6 +224,128 @@ describe('modification of a blog', () => {
       .put(`/api/blogs/${invalidId}`)
       .send({ likes: 12 })
       .expect(400)
+  })
+})
+
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('secret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('creation succeeds with valid data', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser1 = {
+      username: 'ggg',
+      name: 'Gérard Gaston',
+      password: 'gastger80'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser1)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const newUser2 = {
+      username: 'alfredo',
+      name: 'Alfred Robert',
+      password: '(very secure password!!)'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser2)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 2)
+
+    expect(usersAtEnd.map(user => user.username)).toContain(newUser1.username)
+    expect(usersAtEnd.map(user => user.username)).toContain(newUser2.username)
+  })
+
+  test('fails with 400 if password not present or less than 3 characters long', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    let newUser = {
+      username: 'myself',
+      name: 'Alain Deloin'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400, { error: 'password missing or less than 3 characters long' })
+
+    newUser = {
+      username: 'myself',
+      name: 'Alain Deloin',
+      password: '12'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400, { error: 'password missing or less than 3 characters long' })
+
+    const usersAtEnd = await helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('fails with 400 if username not present or less than 3 characters long', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    let newUser = {
+      name: 'Alain Deloin',
+      password: 'a short password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400, { error: 'User validation failed: username: Path `username` is required.' })
+
+    newUser = {
+      username: 'ab',
+      name: 'Alain Deloin',
+      password: 'a short password'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400, { error: 'User validation failed: username: Path `username` (`ab`) is shorter than the minimum allowed length (3).' })
+
+    const usersAtEnd = await helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('fails with 400 if username not unique', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    await api
+      .post('/api/users')
+      .send({
+        username: 'root',
+        name: 'Surname McName',
+        password: 'is this my password?'
+      })
+      .expect(400, {
+        error: 'User validation failed: username: Error, expected `username` to be unique. Value: `root`'
+      })
+
+    const usersAtEnd = await helper.usersInDb()
+
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
   })
 })
 
