@@ -75,6 +75,15 @@ describe('viewing a specific blog', () => {
 })
 
 describe('addition of a new blog', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('secret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
   test('succeeds with complete data', async () => {
     const newBlog = {
       title: 'Cooking for Beginners',
@@ -83,16 +92,18 @@ describe('addition of a new blog', () => {
       likes: 100
     }
 
+    const token = 'bearer ' + await helper.validToken()
+
     await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-    blogsAtEnd.map(b => delete b.id)
-    expect(blogsAtEnd).toContainEqual(newBlog)
+    expect(blogsAtEnd.map(b => b.title)).toContain('Cooking for Beginners')
   })
 
   test('succeeds with valid data missing likes field, default to 0', async () => {
@@ -102,18 +113,14 @@ describe('addition of a new blog', () => {
       url: 'https://cookingiseasy.com'
     }
 
-    const response = await api
+    const token = 'bearer ' + await helper.validToken()
+
+    await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
-    const id = response.body.id
-    const blogInDb = await helper.specificBlogInDb(id)
-    expect(blogInDb).toEqual({
-      ...newBlog,
-      likes: 0,
-      id
-    })
   })
 
   test('fails with 400 if url not present', async () => {
@@ -122,8 +129,11 @@ describe('addition of a new blog', () => {
       author: 'Mega Cook'
     }
 
+    const token = 'bearer ' + await helper.validToken()
+
     await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send(newBlog)
       .expect(400)
 
@@ -137,10 +147,30 @@ describe('addition of a new blog', () => {
       url: 'https://cookingiseasy.com'
     }
 
+    const token = 'bearer ' + await helper.validToken()
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', token)
+      .send(newBlog)
+      .expect(400)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+  })
+
+  test('fails with 401 if token not provided', async () => {
+    const newBlog = {
+      title: 'Cooking for Beginners',
+      author: 'Mega Cook',
+      url: 'https://cookingiseasy.com',
+      likes: 100
+    }
+
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .expect(400)
+      .expect(401)
 
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
