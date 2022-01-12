@@ -3,7 +3,7 @@ GET http://localhost:3001/api/blogs
 ###
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZnJlZG8iLCJpZCI6IjYxZDViZmI2YWI4Y2VkMjQxYzhlMDIxYSIsImlhdCI6MTY0MTM5ODMzM30.x6_ogXNo-lqLGXi4-NcU01MEmjhQ2GB9iZiryinuihs
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZnJlZG8iLCJpZCI6IjYxZGVmZDJlYzYyOWI5OWM2MDMwMDhkMyIsImlhdCI6MTY0MjAwMzg3Nn0.hx6GJoEfI6uOib8_TOCi6JAYe1YIk6qv3VcvopZXiN0
 
 {
   "title": "Hello World",
@@ -16,5 +16,5 @@ Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZ
 GET http://localhost:3001/api/blogs/61938304d0a74b2e93cdb362
 
 ###
-DELETE http://localhost:3001/api/blogs/61d5c588bb894056e4031f90
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZnJlZG8iLCJpZCI6IjYxZDViZmI2YWI4Y2VkMjQxYzhlMDIxYSIsImlhdCI6MTY0MTM5ODMzM30.x6_ogXNo-lqLGXi4-NcU01MEmjhQ2GB9iZiryinuihs
+DELETE http://localhost:3001/api/blogs/61df0212378ff44e562082af
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsZnJlZG8iLCJpZCI6IjYxZGVmZDJlYzYyOWI5OWM2MDMwMDhkMyIsImlhdCI6MTY0MjAwMzg3Nn0.hx6GJoEfI6uOib8_TOCi6JAYe1YIk6qv3VcvopZXiN0

@@ -1,5 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
@@ -66,23 +67,27 @@ blogsRouter.put('/:id', async (request, response, next) => {
 
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
-    const user = request.user
-    if (user === null) {
+    if (request.user === null) {
       return response.status(401).json({
         error: 'token missing or invalid'
       })
     }
 
+    const user = await User.findById(request.user.id)
     const blog = await Blog.findById(request.params.id)
     if (!blog) {
       return response.status(204).end()
     }
+
     if (blog.user.toString() !== user.id.toString()) {
       return response.status(401).json({
         error: 'token missing or invalid'
       })
     }
-    await Blog.findByIdAndRemove(request.params.id)
+
+    await blog.remove()
+    user.blogs = user.blogs.filter(b => b.toString() !== request.params.id.toString())
+    await user.save({ validateModifiedOnly: true })
     response.status(204).end()
   } catch (exception) {
     next(exception)
