@@ -14,6 +14,8 @@ const App = () => {
 
   const [notification, setNotification] = useState(null)
 
+  const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes)
+
   const blogFormRef = useRef()
 
   useEffect(() => {
@@ -139,7 +141,7 @@ const App = () => {
       <Togglable buttonLabel='create new blog' ref={blogFormRef}>
         <CreateBlogForm createBlog={addBlog} />
       </Togglable>
-      {blogs.map(blog =>
+      {sortedBlogs.map(blog =>
         <Blog key={blog.id} blog={blog} handleLike={addLike} />
       )}
     </div>
