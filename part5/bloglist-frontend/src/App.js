@@ -83,6 +83,21 @@ const App = () => {
     }
   }
 
+  const addLike = async blog => {
+    try {
+      const returnedBlog = await blogService.addLike(blog)
+      setBlogs(
+        blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)
+      )
+      notifyWith(
+        `like added to ${returnedBlog.title} by ${returnedBlog.author}`
+      )
+    } catch(exception) {
+      console.error(exception)
+      notifyWith(exception.response.data.error, 'error')
+    }
+  }
+
   if (user === null) {
     return (
       <div>
@@ -125,7 +140,7 @@ const App = () => {
         <CreateBlogForm createBlog={addBlog} />
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLike={addLike} />
       )}
     </div>
   )
