@@ -81,7 +81,7 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlog))
       notifyWith(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     } catch(exception) {
-      notifyWith(exception.response.data.error, 'error')
+      console.error(exception)
     }
   }
 
@@ -97,6 +97,20 @@ const App = () => {
     } catch(exception) {
       console.error(exception)
       notifyWith(exception.response.data.error, 'error')
+    }
+  }
+
+  const removeBlog = async blog => {
+    if (!window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      return
+    }
+    try {
+      await blogService.remove(blog)
+      setBlogs(
+        blogs.filter(b => b.id !== blog.id)
+      )
+    } catch(exception) {
+      console.error(exception)
     }
   }
 
@@ -142,7 +156,7 @@ const App = () => {
         <CreateBlogForm createBlog={addBlog} />
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={addLike} />
+        <Blog key={blog.id} user={user} blog={blog} handleLike={addLike} handleRemove={removeBlog} />
       )}
     </div>
   )
