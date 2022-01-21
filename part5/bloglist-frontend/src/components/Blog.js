@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({ user, blog, handleLike, handleRemove }) => {
+const Blog = ({ currentUserId, blog, handleLike, handleRemove }) => {
 
   const [full, setFull] = useState(false)
 
@@ -9,7 +9,7 @@ const Blog = ({ user, blog, handleLike, handleRemove }) => {
 
   return (
     <div className='blog'>
-      <div>
+      <div className='title-author-view'>
         {blog.title} {blog.author}
         {' '}
         <button type='button' onClick={toggleFull}>
@@ -17,16 +17,18 @@ const Blog = ({ user, blog, handleLike, handleRemove }) => {
         </button>
       </div>
       {full && <>
-        <div>{blog.url}</div>
-        <div>
+        <div className='url'>{blog.url}</div>
+        <div className='likes'>
           likes {blog.likes}
           <button type='button' onClick={() => handleLike(blog)}>like</button>
         </div>
-        <div>{blog.author}</div>
-        {(user.id === blog.user.id || user.id === blog.user) &&
-          <button type="button" onClick={() => handleRemove(blog)}>
-            remove
-          </button>
+        <div className='author-name'>{blog.user.name}</div>
+        {currentUserId === blog.user.id &&
+          <div className='remove'>
+            <button type="button" onClick={() => handleRemove(blog)}>
+              remove
+            </button>
+          </div>
         }
       </>}
     </div>
@@ -34,7 +36,7 @@ const Blog = ({ user, blog, handleLike, handleRemove }) => {
 }
 
 Blog.propTypes = {
-  user: PropTypes.object.isRequired,
+  currentUserId: PropTypes.string.isRequired,
   blog: PropTypes.object.isRequired,
   handleLike: PropTypes.func.isRequired,
   handleRemove: PropTypes.func.isRequired

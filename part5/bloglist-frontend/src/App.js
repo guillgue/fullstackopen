@@ -78,6 +78,11 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blog)
       blogFormRef.current.toggleVisibility()
+      returnedBlog.user = {
+        id: user.id,
+        username: user.username,
+        name: user.name
+      }
       setBlogs(blogs.concat(returnedBlog))
       notifyWith(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
     } catch(exception) {
@@ -87,7 +92,9 @@ const App = () => {
 
   const addLike = async blog => {
     try {
+      const blogUser = blog.user
       const returnedBlog = await blogService.addLike(blog)
+      returnedBlog.user = blogUser
       setBlogs(
         blogs.map(b => b.id !== returnedBlog.id ? b : returnedBlog)
       )
@@ -156,7 +163,7 @@ const App = () => {
         <CreateBlogForm createBlog={addBlog} />
       </Togglable>
       {sortedBlogs.map(blog =>
-        <Blog key={blog.id} user={user} blog={blog} handleLike={addLike} handleRemove={removeBlog} />
+        <Blog key={blog.id} currentUserId={user.id} blog={blog} handleLike={addLike} handleRemove={removeBlog} />
       )}
     </div>
   )
