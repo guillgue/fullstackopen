@@ -23,7 +23,7 @@ const create = async newObject => {
 
 const remove = async blog => {
   const config = {
-    headers: { Authorization: token}
+    headers: { Authorization: token }
   }
   await axios.delete(`${baseUrl}/${blog.id}`, config)
 }
