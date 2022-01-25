@@ -1,6 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { fireEvent, render } from '@testing-library/react'
+import { prettyDOM } from '@testing-library/dom'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
@@ -43,7 +44,7 @@ describe('<Blog />', () => {
 
   })
 
-  test('after clicking view renders add blog information', () => {
+  test('after clicking view renders more blog information', () => {
     const viewButton = component.getByText('view')
     fireEvent.click(viewButton)
     const url = component.container.querySelector('.url')
@@ -53,5 +54,13 @@ describe('<Blog />', () => {
     expect(likes).not.toBe(null)
     expect(url).toHaveTextContent('https://nourl.com')
     expect(likes).toHaveTextContent('likes 10')
+  })
+
+  test('like pressed twice => event handler called twice', () => {
+    fireEvent.click(component.getByText('view'))
+    const likeButton = component.container.querySelector('.likes button')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+    expect(mockHandleLike.mock.calls).toHaveLength(2)
   })
 })
