@@ -1,6 +1,6 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { fireEvent, render } from '@testing-library/react'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
@@ -41,5 +41,17 @@ describe('<Blog />', () => {
     expect(component.container.querySelector('.author-name')).toBe(null)
     expect(component.container.querySelector('.remove')).toBe(null)
 
+  })
+
+  test('after clicking view renders add blog information', () => {
+    const viewButton = component.getByText('view')
+    fireEvent.click(viewButton)
+    const url = component.container.querySelector('.url')
+    const likes = component.container.querySelector('.likes')
+
+    expect(url).not.toBe(null)
+    expect(likes).not.toBe(null)
+    expect(url).toHaveTextContent('https://nourl.com')
+    expect(likes).toHaveTextContent('likes 10')
   })
 })
