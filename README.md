@@ -7,7 +7,7 @@
 - part1: 15
 - part2: 26
 - part4: 36
-- part5: 20
+- part5: 25
 
 ## Ressources to study
 
@@ -17,3 +17,4 @@
 - https://egghead.io/courses/understand-javascript-s-this-keyword-in-depth
 - [Functional programming in javascript](https://www.youtube.com/playlist?list=PL0zVEGEvSaeEd9hlmCXrk5yUyqUag-n84): youtube playlist
 - https://fullstackopen.com/en/part5/login_in_frontend#a-note-on-using-local-storage
+- https://hackernoon.com/flaky-tests-a-war-that-never-ends-9aa32fdef359
