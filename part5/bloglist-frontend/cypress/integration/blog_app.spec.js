@@ -23,7 +23,7 @@ describe('Blog app', function() {
       cy.contains('Charles de Gaulle logged in')
     })
 
-    it.only('fails with wrong credentials', function() {
+    it('fails with wrong credentials', function() {
       cy.get('#username').type('charles90')
       cy.get('#password').type('wrong password')
       cy.contains('login').click()
@@ -32,6 +32,21 @@ describe('Blog app', function() {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
       cy.get('html')
         .should('not.contain', 'Charles de Gaulle logged in')
+    })
+  })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'charles90', password: 'francelibre' })
+    })
+
+    it.only('a new blog can be created', function() {
+      cy.contains('create new blog').click()
+      cy.get('#title').type('My New Blog')
+      cy.get('#author').type('Charles')
+      cy.get('#url').type('https://example.com')
+      cy.get('form > button').click()
+      cy.get('#bloglist').contains('My New Blog Charles')
     })
   })
 })
