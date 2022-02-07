@@ -68,7 +68,7 @@ describe('Blog app', function() {
         })
       })
 
-      it.only('one of those can be liked', function() {
+      it('one of those can be liked', function() {
         cy.contains('Blog 2').parent().as('blog2')
         cy.get('@blog2').contains('view').click()
         cy.get('@blog2').contains('likes 0')
@@ -76,6 +76,31 @@ describe('Blog app', function() {
         cy.get('@blog2').contains('likes 1')
         cy.get('@blog2').find('.likes > button').click()
         cy.get('@blog2').contains('likes 2')
+      })
+
+      it('the owner of a blog can delete it', function() {
+        cy.contains('Blog 2').parent().as('blog2')
+        cy.get('@blog2').contains('view').click()
+        cy.get('@blog2').contains('remove').click()
+        cy.get('html').should('not.contain', 'Blog 2 Author 2')
+      })
+
+      describe('and another user exists', function() {
+        beforeEach(function() {
+          const user = {
+            name: 'Another user',
+            username: 'nobody',
+            password: 'password'
+          }
+          cy.request('POST', 'http://localhost:3003/api/users', user)
+          cy.login({ username: 'nobody', password: 'password' })
+        })
+
+        it.only('blogs can only be deleted by their owner', function() {
+          cy.contains('Blog 2').parent().as('blog2')
+          cy.get('@blog2').contains('view').click()
+          cy.get('@blog2').should('not.contain', 'remove')
+        })
       })
     })
   })
