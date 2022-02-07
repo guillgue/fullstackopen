@@ -54,28 +54,31 @@ describe('Blog app', function() {
         cy.createBlog({
           title: 'Blog 1',
           author: 'Author 1',
-          url: 'https://blog1.example.com'
+          url: 'https://blog1.example.com',
+          likes: 2
         })
         cy.createBlog({
           title: 'Blog 2',
           author: 'Author 2',
-          url: 'https://blog2.example.com'
+          url: 'https://blog2.example.com',
+          likes: 3
         })
         cy.createBlog({
           title: 'Blog 3',
           author: 'Author 3',
-          url: 'https://blog3.example.com'
+          url: 'https://blog3.example.com',
+          likes: 1
         })
       })
 
       it('one of those can be liked', function() {
         cy.contains('Blog 2').parent().as('blog2')
         cy.get('@blog2').contains('view').click()
-        cy.get('@blog2').contains('likes 0')
+        cy.get('@blog2').contains('likes 3')
         cy.get('@blog2').find('.likes > button').click()
-        cy.get('@blog2').contains('likes 1')
+        cy.get('@blog2').contains('likes 4')
         cy.get('@blog2').find('.likes > button').click()
-        cy.get('@blog2').contains('likes 2')
+        cy.get('@blog2').contains('likes 5')
       })
 
       it('the owner of a blog can delete it', function() {
@@ -83,6 +86,12 @@ describe('Blog app', function() {
         cy.get('@blog2').contains('view').click()
         cy.get('@blog2').contains('remove').click()
         cy.get('html').should('not.contain', 'Blog 2 Author 2')
+      })
+
+      it.only('blogs are ordered according to likes', function() {
+        cy.get('#bloglist > :nth-child(1)').contains('Blog 2')
+        cy.get('#bloglist > :nth-child(2)').contains('Blog 1')
+        cy.get('#bloglist > :nth-child(3)').contains('Blog 3')
       })
 
       describe('and another user exists', function() {
@@ -96,7 +105,7 @@ describe('Blog app', function() {
           cy.login({ username: 'nobody', password: 'password' })
         })
 
-        it.only('blogs can only be deleted by their owner', function() {
+        it('blogs can only be deleted by their owner', function() {
           cy.contains('Blog 2').parent().as('blog2')
           cy.get('@blog2').contains('view').click()
           cy.get('@blog2').should('not.contain', 'remove')
