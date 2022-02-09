@@ -8,7 +8,7 @@
 - part2: 26
 - part4: 36
 - part5: 30
-- part6: 2
+- part6: 3
 
 ## Ressources to study
 
