@@ -24,10 +24,21 @@ export const removeNotification = () => {
   }
 }
 
-export const setNotification = (id, message) => {
-  return {
-    type: 'SET_NOTIFICATION',
-    data: { id, message }
+export const setNotification = (message, time, oldNotifId) => {
+  return async dispatch => {
+    if (oldNotifId !== null) {
+      clearTimeout(oldNotifId)
+    }
+    const newNotifId = setTimeout(() => 
+      dispatch(removeNotification()), time
+    )
+    dispatch({
+      type: 'SET_NOTIFICATION',
+      data: {
+        id: newNotifId,
+        message
+      }
+    })
   }
 }
 
