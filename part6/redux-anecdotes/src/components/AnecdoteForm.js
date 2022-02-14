@@ -2,7 +2,6 @@ import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { createAnecdote } from "../reducers/anecdoteReducer"
 import { setNotification, removeNotification } from "../reducers/notificationReducer"
-import anecdoteService from "../services/anecdotes"
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -15,8 +14,7 @@ const AnecdoteForm = () => {
     if (notifId !== null) {
       clearTimeout(notifId)
     }
-    const newAnecdote = await anecdoteService.createNew(content)
-    dispatch(createAnecdote(newAnecdote))
+    dispatch(createAnecdote(content))
     const newNotifId = setTimeout(() => dispatch(removeNotification()), 5000)
     dispatch(setNotification(newNotifId,`you created '${content}'`))
   }
