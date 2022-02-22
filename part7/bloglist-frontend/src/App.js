@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Blog from "./components/Blog";
 import CreateBlogForm from "./components/CreateBlogForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import { setNotification } from "./reducers/notificationReducer";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -12,7 +14,8 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const [notification, setNotification] = useState(null);
+  const dispatch = useDispatch();
+  const notification = useSelector((state) => state.notification);
 
   const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes);
 
@@ -31,20 +34,6 @@ const App = () => {
     }
   }, []);
 
-  const notifyWith = (message, type = "success") => {
-    if (notification !== null) {
-      clearTimeout(notification.timeoutID);
-    }
-    const timeoutID = setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-    setNotification({
-      timeoutID,
-      message,
-      type,
-    });
-  };
-
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -56,10 +45,17 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
-      notifyWith("logged in");
+      dispatch(
+        setNotification({ type: "success", message: "logged in" }, 5000)
+      );
     } catch (exception) {
       setPassword("");
-      notifyWith("Wrong username or password", "error");
+      dispatch(
+        setNotification(
+          { type: "error", message: "Wrong username or password" },
+          5000
+        )
+      );
     }
   };
 
@@ -67,7 +63,7 @@ const App = () => {
     window.localStorage.removeItem("loggedUser");
     blogService.setToken(null);
     setUser(null);
-    notifyWith("logged out");
+    dispatch(setNotification({ type: "success", message: "logged out" }, 5000));
   };
 
   const addBlog = async (blog) => {
@@ -80,8 +76,14 @@ const App = () => {
         name: user.name,
       };
       setBlogs(blogs.concat(returnedBlog));
-      notifyWith(
-        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
+      dispatch(
+        setNotification(
+          {
+            type: "success",
+            message: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          },
+          5000
+        )
       );
     } catch (exception) {
       console.error(exception);
@@ -94,12 +96,23 @@ const App = () => {
       const returnedBlog = await blogService.addLike(blog);
       returnedBlog.user = blogUser;
       setBlogs(blogs.map((b) => (b.id !== returnedBlog.id ? b : returnedBlog)));
-      notifyWith(
-        `like added to ${returnedBlog.title} by ${returnedBlog.author}`
+      dispatch(
+        setNotification(
+          {
+            type: "success",
+            message: `like added to ${returnedBlog.title} by ${returnedBlog.author}`,
+          },
+          5000
+        )
       );
     } catch (exception) {
       console.error(exception);
-      notifyWith(exception.response.data.error, "error");
+      dispatch(
+        setNotification(
+          { type: "error", message: exception.response.data.error },
+          5000
+        )
+      );
     }
   };
 
