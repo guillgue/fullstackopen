@@ -3,7 +3,7 @@ import Blog from "./Blog";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeBlogs } from "../reducers/blogReducer";
 
-const BlogList = ({ currentUser }) => {
+const BlogList = () => {
   const dispatch = useDispatch();
 
   const sortedBlogs = useSelector((state) =>
@@ -17,7 +17,7 @@ const BlogList = ({ currentUser }) => {
   return (
     <div id="bloglist">
       {sortedBlogs.map((blog) => (
-        <Blog key={blog.id} currentUser={currentUser} blog={blog} />
+        <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   );

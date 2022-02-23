@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "../reducers/notificationReducer";
 import { removeBlog, likeBlog } from "../reducers/blogReducer";
 
-const Blog = ({ currentUser, blog }) => {
+const Blog = ({ blog }) => {
   const [full, setFull] = useState(false);
 
   const toggleFull = () => setFull(!full);
 
   const dispatch = useDispatch();
+
+  const currentUser = useSelector((state) => state.user.info);
 
   const handleLike = async (blog) => {
     dispatch(likeBlog(blog));

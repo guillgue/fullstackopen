@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useToggleVisibility } from "./Togglable";
 import { createBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
 
-const CreateBlogForm = ({ currentUser }) => {
+const CreateBlogForm = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
   const dispatch = useDispatch();
+
+  const currentUser = useSelector((state) => state.user.info);
 
   const toggleVisibility = useToggleVisibility();
 
