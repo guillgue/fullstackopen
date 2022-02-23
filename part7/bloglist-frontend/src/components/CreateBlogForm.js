@@ -4,7 +4,7 @@ import { useToggleVisibility } from "./Togglable";
 import { createBlog } from "../reducers/blogReducer";
 import { setNotification } from "../reducers/notificationReducer";
 
-const CreateBlogForm = () => {
+const CreateBlogForm = ({ currentUser }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -15,7 +15,7 @@ const CreateBlogForm = () => {
 
   const addBlog = async (event) => {
     event.preventDefault();
-    dispatch(createBlog({ title, author, url }));
+    dispatch(createBlog(currentUser, { title, author, url }));
     dispatch(
       setNotification(
         {

@@ -13,6 +13,12 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
+  let userInfo = null;
+  if (user) {
+    userInfo = { ...user };
+    delete userInfo.token;
+  }
+
   const dispatch = useDispatch();
   const notification = useSelector((state) => state.notification);
   // const blogs = useSelector((state) => state.blogs)
@@ -101,9 +107,9 @@ const App = () => {
         </button>
       </p>
       <Togglable buttonLabel="create new blog">
-        <CreateBlogForm />
+        <CreateBlogForm currentUser={userInfo} />
       </Togglable>
-      <BlogList user={user} />
+      <BlogList currentUser={userInfo} />
     </div>
   );
 };
