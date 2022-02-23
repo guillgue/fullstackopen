@@ -1,16 +1,34 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useToggleVisibility } from "./Togglable";
+import { createBlog } from "../reducers/blogReducer";
+import { setNotification } from "../reducers/notificationReducer";
 
-const CreateBlogForm = ({ createBlog }) => {
+const CreateBlogForm = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
+  const dispatch = useDispatch();
+
+  const toggleVisibility = useToggleVisibility();
+
   const addBlog = async (event) => {
     event.preventDefault();
-    createBlog({ title, author, url });
+    dispatch(createBlog({ title, author, url }));
+    dispatch(
+      setNotification(
+        {
+          type: "success",
+          message: `a new blog ${title} by ${author} added`,
+        },
+        5000
+      )
+    );
     setTitle("");
     setAuthor("");
     setUrl("");
+    toggleVisibility();
   };
 
   return (

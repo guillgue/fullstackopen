@@ -36,4 +36,6 @@ const addLike = async (blog) => {
   return response.data;
 };
 
-export default { setToken, getAll, create, remove, addLike };
+const blogService = { setToken, getAll, create, remove, addLike };
+
+export default blogService;
