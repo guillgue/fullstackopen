@@ -1,13 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "../reducers/notificationReducer";
 import { removeBlog, likeBlog } from "../reducers/blogReducer";
 
 const Blog = ({ blog }) => {
-  const [full, setFull] = useState(false);
-
-  const toggleFull = () => setFull(!full);
-
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.user.info);
@@ -41,32 +37,29 @@ const Blog = ({ blog }) => {
     );
   };
 
+  if (!blog) {
+    return null;
+  }
+
   return (
-    <div className="blog">
-      <div className="title-author-view">
-        {blog.title} {blog.author}{" "}
-        <button type="button" onClick={toggleFull}>
-          {full ? "hide" : "view"}
+    <div>
+      <h2>
+        {blog.title} {blog.author}
+      </h2>
+      <div className="url">{blog.url}</div>
+      <div className="likes">
+        likes {blog.likes}
+        <button type="button" onClick={() => handleLike(blog)}>
+          like
         </button>
       </div>
-      {full && (
-        <>
-          <div className="url">{blog.url}</div>
-          <div className="likes">
-            likes {blog.likes}
-            <button type="button" onClick={() => handleLike(blog)}>
-              like
-            </button>
-          </div>
-          <div className="author-name">{blog.user.name}</div>
-          {currentUser.id === blog.user.id && (
-            <div className="remove">
-              <button type="button" onClick={() => handleRemove(blog)}>
-                remove
-              </button>
-            </div>
-          )}
-        </>
+      <div className="author-name">added by {blog.user.name}</div>
+      {currentUser.id === blog.user.id && (
+        <div className="remove">
+          <button type="button" onClick={() => handleRemove(blog)}>
+            remove
+          </button>
+        </div>
       )}
     </div>
   );
