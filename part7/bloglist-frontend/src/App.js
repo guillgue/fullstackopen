@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Routes, Route, useMatch } from "react-router-dom";
+import { Routes, Route, useMatch, Link } from "react-router-dom";
 import BlogList from "./components/BlogList";
 import Blog from "./components/Blog";
 import CreateBlogForm from "./components/CreateBlogForm";
@@ -54,11 +54,23 @@ const App = () => {
     );
   }
 
+  const padding = {
+    padding: 5,
+  };
+
   return (
     <div>
+      <div>
+        <Link style={padding} to="/">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        <Logout style={padding} user={loggedUser} />
+      </div>
       <h2>blogs</h2>
       <Notification notification={notification} />
-      <Logout user={loggedUser} />
       <Routes>
         <Route
           path="/"

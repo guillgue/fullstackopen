@@ -1,9 +1,11 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setNotification } from "../reducers/notificationReducer";
 import { removeBlog, likeBlog } from "../reducers/blogReducer";
 
 const Blog = ({ blog }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const currentUser = useSelector((state) => state.user.info);
@@ -35,6 +37,7 @@ const Blog = ({ blog }) => {
         5000
       )
     );
+    navigate("/");
   };
 
   if (!blog) {
@@ -61,6 +64,12 @@ const Blog = ({ blog }) => {
           </button>
         </div>
       )}
+      <h2>comments</h2>
+      <ul>
+        {blog.comments.map((comment, i) => (
+          <li key={i}>{comment}</li>
+        ))}
+      </ul>
     </div>
   );
 };

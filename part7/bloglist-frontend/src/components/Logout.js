@@ -12,12 +12,12 @@ const Logout = ({ user }) => {
   };
 
   return (
-    <p>
-      {user.info.name} logged in
+    <>
+      {user.info.name} logged in{" "}
       <button type="button" onClick={handleLogout}>
         logout
       </button>
-    </p>
+    </>
   );
 };
 
