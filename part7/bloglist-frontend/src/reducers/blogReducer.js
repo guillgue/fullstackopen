@@ -8,6 +8,14 @@ const blogReducer = (state = [], action) => {
       return state.filter((b) => b.id !== action.data.id);
     case "LIKE_BLOG":
       return state.map((b) => (b.id !== action.data.id ? b : action.data));
+    case "COMMENT_BLOG": {
+      const blogToComment = state.find((b) => b.id === action.data.id);
+      const commentedBlog = {
+        ...blogToComment,
+        comments: blogToComment.comments.concat(action.data.comment),
+      };
+      return state.map((b) => (b.id !== action.data.id ? b : commentedBlog));
+    }
     case "INIT_BLOGS":
       return action.data;
     default:
@@ -54,6 +62,19 @@ export const likeBlog = (blog) => {
       data: {
         ...blog,
         likes: likedBlog.likes,
+      },
+    });
+  };
+};
+
+export const commentBlog = (id, content) => {
+  return async (dispatch) => {
+    const comment = await blogService.addComment(id, content);
+    dispatch({
+      type: "COMMENT_BLOG",
+      data: {
+        id,
+        comment,
       },
     });
   };

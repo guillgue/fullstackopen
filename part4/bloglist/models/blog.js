@@ -14,10 +14,12 @@ const blogSchema = new mongoose.Schema({
     minLength: 4,
   },
   likes: Number,
-  comments: {
-    type: Array,
-    required: true,
-  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

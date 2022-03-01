@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setNotification } from "../reducers/notificationReducer";
-import { removeBlog, likeBlog } from "../reducers/blogReducer";
+import { removeBlog, likeBlog, commentBlog } from "../reducers/blogReducer";
 
 const Blog = ({ blog }) => {
+  const [content, setContent] = useState("");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -21,6 +23,21 @@ const Blog = ({ blog }) => {
         5000
       )
     );
+  };
+
+  const handleComment = async (event) => {
+    event.preventDefault();
+    dispatch(commentBlog(blog.id, content));
+    dispatch(
+      setNotification(
+        {
+          type: "success",
+          message: `comment ${content} added to ${blog.title}`,
+        },
+        5000
+      )
+    );
+    setContent("");
   };
 
   const handleRemove = async (blog) => {
@@ -64,12 +81,24 @@ const Blog = ({ blog }) => {
           </button>
         </div>
       )}
-      <h2>comments</h2>
-      <ul>
-        {blog.comments.map((comment, i) => (
-          <li key={i}>{comment}</li>
-        ))}
-      </ul>
+      <div>
+        <h2>comments</h2>
+        <form onSubmit={handleComment}>
+          <input
+            id="content"
+            type="text"
+            value={content}
+            name="content"
+            onChange={({ target }) => setContent(target.value)}
+          />
+          <button type="submit">add comment</button>
+        </form>
+        <ul>
+          {blog.comments.map((comment, i) => (
+            <li key={i}>{comment.content}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

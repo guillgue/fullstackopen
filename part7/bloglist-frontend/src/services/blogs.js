@@ -36,6 +36,19 @@ const addLike = async (blog) => {
   return response.data;
 };
 
-const blogService = { setToken, getAll, create, remove, addLike };
+const addComment = async (id, content) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  const response = await axios.post(
+    `${baseUrl}/${id}/comments`,
+    { content },
+    config
+  );
+  return response.data;
+};
+
+const blogService = { setToken, getAll, create, remove, addLike, addComment };
 
 export default blogService;
