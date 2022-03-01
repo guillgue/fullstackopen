@@ -1,19 +1,33 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Paper,
+} from "@mui/material";
+
 const BlogList = ({ blogList }) => {
   const sortedBlogs = [...blogList].sort((a, b) => b.likes - a.likes);
 
   return (
-    <div id="bloglist">
-      {sortedBlogs.map((blog) => (
-        <div key={blog.id} className="blog">
-          <Link to={`/blogs/${blog.id}`}>
-            {blog.title} {blog.author}
-          </Link>
-        </div>
-      ))}
-    </div>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          {sortedBlogs.map((blog) => (
+            <TableRow key={blog.id}>
+              <TableCell>
+                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+              </TableCell>
+              <TableCell>by {blog.author}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

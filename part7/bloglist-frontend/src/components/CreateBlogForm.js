@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button, TextField } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useToggleVisibility } from "./Togglable";
 import { createBlog } from "../reducers/blogReducer";
@@ -38,8 +39,8 @@ const CreateBlogForm = () => {
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         <div>
-          title:
-          <input
+          <TextField
+            label="title"
             id="title"
             type="text"
             value={title}
@@ -48,8 +49,8 @@ const CreateBlogForm = () => {
           />
         </div>
         <div>
-          author:
-          <input
+          <TextField
+            label="author"
             id="author"
             type="text"
             value={author}
@@ -58,8 +59,8 @@ const CreateBlogForm = () => {
           />
         </div>
         <div>
-          url:
-          <input
+          <TextField
+            label="url"
             id="url"
             type="url"
             value={url}
@@ -67,7 +68,7 @@ const CreateBlogForm = () => {
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type="submit">create</button>
+        <Button type="submit">create</Button>
       </form>
     </div>
   );

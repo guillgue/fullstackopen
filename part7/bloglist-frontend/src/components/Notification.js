@@ -1,11 +1,12 @@
 import React from "react";
+import { Alert } from "@mui/material";
 
 const Notification = ({ notification }) => {
   if (notification === null) {
     return null;
   }
 
-  return <div className={notification.type}>{notification.message}</div>;
+  return <Alert severity={notification.type}>{notification.message}</Alert>;
 };
 
 export default Notification;

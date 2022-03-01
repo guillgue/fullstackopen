@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "@mui/material/Button";
 import { useDispatch } from "react-redux";
 import { logout } from "../reducers/userReducer";
 import { setNotification } from "../reducers/notificationReducer";
@@ -13,10 +14,10 @@ const Logout = ({ user }) => {
 
   return (
     <>
-      {user.info.name} logged in{" "}
-      <button type="button" onClick={handleLogout}>
+      <Button color="inherit" type="button" onClick={handleLogout}>
         logout
-      </button>
+      </Button>
+      {user.info.name} logged in
     </>
   );
 };

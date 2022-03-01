@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Routes, Route, useMatch, Link } from "react-router-dom";
+import Container from "@mui/material/Container";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
 import BlogList from "./components/BlogList";
 import Blog from "./components/Blog";
 import CreateBlogForm from "./components/CreateBlogForm";
@@ -46,29 +50,27 @@ const App = () => {
 
   if (loggedUser === null) {
     return (
-      <div>
+      <Container>
         <h2>Log in to application</h2>
         <Notification notification={notification} />
         <LoginForm />
-      </div>
+      </Container>
     );
   }
 
-  const padding = {
-    padding: 5,
-  };
-
   return (
-    <div>
-      <div>
-        <Link style={padding} to="/">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        <Logout style={padding} user={loggedUser} />
-      </div>
+    <Container>
+      <AppBar position="static">
+        <Toolbar>
+          <Button color="inherit" component={Link} to="/">
+            blogs
+          </Button>
+          <Button color="inherit" component={Link} to="/users">
+            users
+          </Button>
+          <Logout user={loggedUser} />
+        </Toolbar>
+      </AppBar>
       <h2>blogs</h2>
       <Notification notification={notification} />
       <Routes>
@@ -87,7 +89,7 @@ const App = () => {
         <Route path="/users" element={<UserList userList={userList} />} />
         <Route path="/users/:id" element={<User user={selectedUser} />} />
       </Routes>
-    </div>
+    </Container>
   );
 };
 

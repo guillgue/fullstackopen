@@ -1,4 +1,5 @@
 import React, { useState, useContext } from "react";
+import { Button } from "@mui/material";
 
 const ToggleContext = React.createContext({ toggleVisibility: null });
 
@@ -19,13 +20,13 @@ const Togglable = (props) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <Button onClick={toggleVisibility}>{props.buttonLabel}</Button>
       </div>
       <div style={showWhenVisible}>
         <ToggleContext.Provider value={toggleVisibility}>
           {props.children}
         </ToggleContext.Provider>
-        <button onClick={toggleVisibility}>cancel</button>
+        <Button onClick={toggleVisibility}>cancel</Button>
       </div>
     </div>
   );
