@@ -80,7 +80,7 @@ let books = [
     genres: ["classic", "crime"],
   },
   {
-    title: "The Demon ",
+    title: "The Demon",
     published: 1872,
     author: "Fyodor Dostoevsky",
     id: "afa5de04-344d-11e9-a414-719c6709cf3e",
@@ -93,6 +93,7 @@ const typeDefs = gql`
     name: String!
     born: Int
     id: ID!
+    bookCount: Int!
   }
 
   type Book {
@@ -107,6 +108,7 @@ const typeDefs = gql`
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book!]!
+    allAuthors: [Author!]!
   }
 `;
 
@@ -115,6 +117,14 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: () => books,
+    allAuthors: () => authors,
+  },
+  Author: {
+    bookCount: (root) =>
+      books.reduce(
+        (sum, { author }) => (author === root.name ? sum + 1 : sum),
+        0
+      ),
   },
 };
 
