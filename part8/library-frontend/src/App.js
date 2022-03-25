@@ -4,11 +4,15 @@ import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 
-import { ALL_AUTHORS } from "./queries";
+import { ALL_DATA } from "./queries";
 
 const App = () => {
   const [page, setPage] = useState("authors");
-  const result = useQuery(ALL_AUTHORS);
+
+  // not sure about this, how is it done in the correction?
+  // maybe one query for each of books, authors
+  // but it is nice to request everything once
+  const result = useQuery(ALL_DATA);
 
   return (
     <div>
@@ -23,7 +27,7 @@ const App = () => {
       ) : (
         <>
           <Authors show={page === "authors"} authors={result.data.allAuthors} />
-          <Books show={page === "books"} />
+          <Books show={page === "books"} books={result.data.allBooks} />
           <NewBook show={page === "add"} />
         </>
       )}
