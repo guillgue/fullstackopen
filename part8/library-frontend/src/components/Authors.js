@@ -3,17 +3,17 @@ import { useState } from "react";
 import { EDIT_BORN } from "../queries";
 
 const Authors = (props) => {
-  const [name, setName] = useState("");
   const [born, setBorn] = useState("");
+
+  const [selected, setSelected] = useState(props.authors[0]?.name);
 
   const [changeBorn] = useMutation(EDIT_BORN);
 
   const submit = async (event) => {
     event.preventDefault();
 
-    changeBorn({ variables: { name, setBornTo: Number(born) } });
+    changeBorn({ variables: { name: selected, setBornTo: Number(born) } });
 
-    setName("");
     setBorn("");
   };
 
@@ -44,10 +44,16 @@ const Authors = (props) => {
       <form onSubmit={submit}>
         <div>
           name
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
+          <select
+            value={selected}
+            onChange={({ target }) => setSelected(target.value)}
+          >
+            {props.authors.map((a) => (
+              <option key={a.id} value={a.name}>
+                {a.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           born
