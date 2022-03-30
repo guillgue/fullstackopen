@@ -58,19 +58,36 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
-    authorCount: () => Author.collection.countDocuments(),
+    authorCount: async () => Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      return Book.find({}).populate("author");
+      if (!args.genre) {
+        return Book.find({}).populate("author");
+      }
+      return Book.find({ genres: args.genre }).populate("author");
     },
     allAuthors: async () => Author.find({}),
   },
   Author: {
-    /*
-    bookCount: (root) =>
-      books.reduce(
-        (sum, { author }) => (author === root.name ? sum + 1 : sum),
-        0
-      ), */
+    bookCount: async (root) => {
+      // how is it done in the correction?
+      const aggregate = await Book.aggregate([
+        {
+          $lookup: {
+            from: "authors",
+            localField: "author",
+            foreignField: "_id",
+            as: "author",
+          },
+        },
+        {
+          $match: {
+            "author.name": root.name,
+          },
+        },
+        { $count: "count" },
+      ]);
+      return aggregate[0].count;
+    },
   },
   Mutation: {
     addBook: async (root, args) => {
@@ -80,19 +97,17 @@ const resolvers = {
         await author.save();
       }
       const book = new Book({ ...args, author: author });
-      await book.save();
-      return book;
+      return book.save();
     },
-    editAuthor: (root, args) => {
-      /*
-      const author = authors.find((a) => a.name === args.name);
+    editAuthor: async (root, { name, setBornTo }) => {
+      const author = await Author.findOne({ name });
+      // look at fullstack answer here
+      // input error or null?
       if (!author) {
         return null;
       }
-      const updatedAuthor = { ...author, born: args.setBornTo };
-      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a));
-      return updatedAuthor;
-      */
+      author.born = setBornTo;
+      return author.save();
     },
   },
 };
