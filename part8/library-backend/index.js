@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require("apollo-server");
+const { ApolloServer, gql, UserInputError } = require("apollo-server");
 // const jwt = require("jsonwebtoken");
 
 // const JWT_SECRET = process.env.JWT_SECRET;
@@ -94,10 +94,19 @@ const resolvers = {
       let author = await Author.findOne({ name: args.author });
       if (!author) {
         author = new Author({ name: args.author });
-        await author.save();
+        try {
+          await author.save();
+        } catch (error) {
+          throw new UserInputError(error.message, { invalidArgs: args });
+        }
       }
       const book = new Book({ ...args, author: author });
-      return book.save();
+      try {
+        await book.save();
+      } catch (error) {
+        throw new UserInputError(error.message, { invalidArgs: args });
+      }
+      return book;
     },
     editAuthor: async (root, { name, setBornTo }) => {
       const author = await Author.findOne({ name });
@@ -107,7 +116,14 @@ const resolvers = {
         return null;
       }
       author.born = setBornTo;
-      return author.save();
+      try {
+        await author.save();
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: { name, setBornTo },
+        });
+      }
+      return author;
     },
   },
 };
