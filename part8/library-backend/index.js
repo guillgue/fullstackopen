@@ -108,6 +108,9 @@ const resolvers = {
         },
         { $count: "count" },
       ]);
+      if (aggregate.length === 0) {
+        return 0;
+      }
       return aggregate[0].count;
     },
   },
