@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { EDIT_BORN } from "../queries";
 
 const Authors = (props) => {
@@ -40,31 +40,35 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <h3>Set birthyear</h3>
-      <form onSubmit={submit}>
-        <div>
-          name
-          <select
-            value={selected}
-            onChange={({ target }) => setSelected(target.value)}
-          >
-            {props.authors.map((a) => (
-              <option key={a.id} value={a.name}>
-                {a.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          born
-          <input
-            value={born}
-            type="number"
-            onChange={({ target }) => setBorn(target.value)}
-          />
-        </div>
-        <button type="submit">update author</button>
-      </form>
+      {props.token ? (
+        <>
+          <h3>Set birthyear</h3>
+          <form onSubmit={submit}>
+            <div>
+              name
+              <select
+                value={selected}
+                onChange={({ target }) => setSelected(target.value)}
+              >
+                {props.authors.map((a) => (
+                  <option key={a.id} value={a.name}>
+                    {a.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              born
+              <input
+                value={born}
+                type="number"
+                onChange={({ target }) => setBorn(target.value)}
+              />
+            </div>
+            <button type="submit">update author</button>
+          </form>{" "}
+        </>
+      ) : null}
     </div>
   );
 };
