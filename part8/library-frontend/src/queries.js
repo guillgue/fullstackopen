@@ -22,6 +22,7 @@ export const ALL_DATA = gql`
     allBooks {
       title
       published
+      genres
       author {
         name
       }
