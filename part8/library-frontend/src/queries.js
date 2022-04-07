@@ -28,6 +28,11 @@ export const ALL_DATA = gql`
       }
       id
     }
+    me {
+      username
+      favoriteGenre
+      id
+    }
   }
 `;
 
