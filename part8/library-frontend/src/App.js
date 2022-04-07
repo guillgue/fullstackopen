@@ -1,4 +1,4 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
@@ -6,17 +6,10 @@ import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import Recommend from "./components/Recommend";
 
-import { ALL_DATA } from "./queries";
-
 const App = () => {
   const [page, setPage] = useState("authors");
   const [token, setToken] = useState(null);
   const client = useApolloClient();
-
-  // not sure about this, how is it done in the correction?
-  // maybe one query for each of books, authors
-  // but it is nice to request everything once
-  const result = useQuery(ALL_DATA);
 
   useEffect(() => {
     const token = localStorage.getItem("library-user-token");
@@ -48,29 +41,15 @@ const App = () => {
         )}
       </div>
 
-      {result.loading ? (
-        <div>loading...</div>
-      ) : (
-        <>
-          <Authors
-            show={page === "authors"}
-            authors={result.data.allAuthors}
-            token={token}
-          />
-          <Books show={page === "books"} books={result.data.allBooks} />
-          <NewBook show={page === "add"} />
-          <Recommend
-            show={page === "recommend"}
-            books={result.data.allBooks}
-            user={result.data.me}
-          />
-          <LoginForm
-            show={page === "login"}
-            setToken={setToken}
-            setPage={setPage}
-          />
-        </>
-      )}
+      <Authors show={page === "authors"} token={token} />
+      <Books show={page === "books"} />
+      <NewBook show={page === "add"} />
+      <Recommend show={page === "recommend"} />
+      <LoginForm
+        show={page === "login"}
+        setToken={setToken}
+        setPage={setPage}
+      />
     </div>
   );
 };

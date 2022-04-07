@@ -1,32 +1,42 @@
 import React, { useState } from "react";
+import { useQuery } from "@apollo/client";
 import BookTable from "./BookTable";
+import { ALL_BOOKS, ALL_GENRES } from "../queries";
 
 const Books = (props) => {
   const [genre, setGenre] = useState("");
 
-  const filteredBooks =
-    genre === ""
-      ? props.books
-      : props.books.filter((b) => b.genres.includes(genre));
+  const books_result = useQuery(ALL_BOOKS, {
+    variables: genre === "" ? {} : { genre },
+  });
 
-  // problem: recomputed each time we select a genre
-  const genres = new Set();
-  props.books.forEach((b) => b.genres.forEach((g) => genres.add(g)));
+  const genres_result = useQuery(ALL_GENRES);
 
   if (!props.show) {
     return null;
   }
 
+  const books = books_result?.data?.allBooks;
+  const genres = genres_result?.data?.allGenres;
+
   return (
     <div>
       <h2>books</h2>
-      <BookTable books={filteredBooks} />
-      {[...genres].map((g) => (
-        <button key={g} onClick={() => setGenre(g)}>
-          {g}
-        </button>
-      ))}
-      <button onClick={() => setGenre("")}>all genres</button>
+      {books_result.loading ? (
+        <div>loading...</div>
+      ) : (
+        <BookTable books={books} />
+      )}
+      {genres_result.loading ? null : (
+        <div>
+          {genres.map((g) => (
+            <button key={g} onClick={() => setGenre(g)}>
+              {g}
+            </button>
+          ))}
+          <button onClick={() => setGenre("")}>all genres</button>
+        </div>
+      )}
     </div>
   );
 };

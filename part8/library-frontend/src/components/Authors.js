@@ -1,13 +1,16 @@
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { EDIT_BORN } from "../queries";
+import { ALL_AUTHORS, EDIT_BORN } from "../queries";
 
 const Authors = (props) => {
   const [born, setBorn] = useState("");
 
-  const [selected, setSelected] = useState(props.authors[0]?.name);
+  const result = useQuery(ALL_AUTHORS);
+  const authors = result?.data?.allAuthors;
 
   const [changeBorn] = useMutation(EDIT_BORN);
+
+  const [selected, setSelected] = useState(authors ? authors[0] : "");
 
   const submit = async (event) => {
     event.preventDefault();
@@ -21,6 +24,10 @@ const Authors = (props) => {
     return null;
   }
 
+  if (result.loading) {
+    return <div>loading...</div>;
+  }
+
   return (
     <div>
       <h2>authors</h2>
@@ -31,7 +38,7 @@ const Authors = (props) => {
             <th>born</th>
             <th>books</th>
           </tr>
-          {props.authors.map((a) => (
+          {authors.map((a) => (
             <tr key={a.name}>
               <td>{a.name}</td>
               <td>{a.born}</td>
@@ -50,7 +57,7 @@ const Authors = (props) => {
                 value={selected}
                 onChange={({ target }) => setSelected(target.value)}
               >
-                {props.authors.map((a) => (
+                {authors.map((a) => (
                   <option key={a.id} value={a.name}>
                     {a.name}
                   </option>
