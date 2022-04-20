@@ -6,15 +6,16 @@ import BookTable from "./BookTable";
 const Recommend = ({ show }) => {
   const me_result = useQuery(ME);
   const books_result = useQuery(ALL_BOOKS, {
-    variables: me_result.loading
-      ? {}
-      : { genre: me_result.data.me.favoriteGenre },
+    variables:
+      me_result.loading || !me_result?.data?.me
+        ? {}
+        : { genre: me_result.data.me.favoriteGenre },
   });
 
   const user = me_result?.data?.me;
   const books = books_result?.data?.allBooks;
 
-  if (!show) {
+  if (!show || !user) {
     return null;
   }
 

@@ -38,7 +38,7 @@ const start = async () => {
 
   const wsServer = new WebSocketServer({
     server: httpServer,
-    path: "/",
+    path: "/subscriptions",
   });
 
   const serverCleanup = useServer({ schema }, wsServer);
@@ -71,7 +71,7 @@ const start = async () => {
 
   server.applyMiddleware({
     app,
-    path: "/",
+    path: "/graphql",
   });
 
   const PORT = 4000;
