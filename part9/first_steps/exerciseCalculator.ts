@@ -8,11 +8,40 @@ interface Result {
   average: number;
 }
 
-// division by zero?
-const calculateExercises = (daily: Array<number>, target: number): Result => {
-  const periodLength = daily.length;
-  const trainingDays = daily.filter((n) => n > 0).length;
-  const average = daily.reduce((a, b) => a + b) / periodLength;
+interface parsedExercises {
+  target: number;
+  exercises: Array<number>;
+}
+
+const parseExercises = (args: Array<string>): parsedExercises => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+
+  const target = Number(args[2]);
+
+  if (isNaN(target)) {
+    throw new Error("Provided values were not numbers!");
+  }
+
+  const exercises = new Array(args.length - 3).fill(0);
+
+  for (let i = 3; i < args.length; i++) {
+    const hours = Number(args[i]);
+    if (isNaN(hours)) {
+      throw new Error("Provided values were not numbers!");
+    }
+    exercises[i - 3] = hours;
+  }
+
+  return { target, exercises };
+};
+
+const calculateExercises = (
+  exercises: Array<number>,
+  target: number
+): Result => {
+  const periodLength = exercises.length;
+  const trainingDays = exercises.filter((n) => n > 0).length;
+  const average = exercises.reduce((a, b) => a + b) / periodLength;
   const score = target === 0 ? 1 : average / target;
 
   let rating: 1 | 2 | 3 = 1;
@@ -39,4 +68,13 @@ const calculateExercises = (daily: Array<number>, target: number): Result => {
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const { target, exercises } = parseExercises(process.argv);
+  console.log(calculateExercises(exercises, target));
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}

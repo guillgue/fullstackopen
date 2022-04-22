@@ -1,5 +1,24 @@
+interface parsedMeasurement {
+  weight: number;
+  height: number;
+}
+
+const parseMeasurement = (args: Array<string>): parsedMeasurement => {
+  if (args.length < 4) throw new Error("Not enough arguments");
+  if (args.length > 4) throw new Error("Too many arguments");
+
+  const height = Number(args[2]);
+  const weight = Number(args[3]);
+
+  if (!isNaN(height) && !isNaN(weight)) {
+    return { height, weight };
+  } else {
+    throw new Error("Provided values were not numbers!");
+  }
+};
+
 const calculateBmi = (height: number, weight: number): string => {
-  if (weight === 0) {
+  if (height === 0) {
     throw new Error("can't divide by zero!");
   }
   let bmi = (10000 * weight) / (height * height);
@@ -12,4 +31,13 @@ const calculateBmi = (height: number, weight: number): string => {
   }
 };
 
-console.log(calculateBmi(179, 70));
+try {
+  const { height, weight } = parseMeasurement(process.argv);
+  console.log(calculateBmi(height, weight));
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened.";
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message;
+  }
+  console.log(errorMessage);
+}
