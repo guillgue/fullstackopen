@@ -3,7 +3,7 @@ interface parsedMeasurement {
   height: number;
 }
 
-const parseMeasurement = (args: Array<string>): parsedMeasurement => {
+export const parseMeasurement = (args: Array<string>): parsedMeasurement => {
   if (args.length < 4) throw new Error("Not enough arguments");
   if (args.length > 4) throw new Error("Too many arguments");
 
@@ -17,7 +17,7 @@ const parseMeasurement = (args: Array<string>): parsedMeasurement => {
   }
 };
 
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   if (height === 0) {
     throw new Error("can't divide by zero!");
   }
