@@ -11,7 +11,7 @@
 - part6: 18
 - part7: 38
 - part8: 41
-- part9: 4
+- part9: 6
 
 ## Ressources to study
 

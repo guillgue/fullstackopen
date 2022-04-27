@@ -35,7 +35,7 @@ const parseExercises = (args: Array<string>): parsedExercises => {
   return { target, exercises };
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   exercises: Array<number>,
   target: number
 ): Result => {
