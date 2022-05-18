@@ -1,16 +1,16 @@
 import patientEntries from "../../data/patients";
-import {
-  NewPatientEntry,
-  NonSensitivePatientEntry,
-  PatientEntry,
-} from "../types";
+import { NewPatient, PublicPatient, Patient } from "../types";
 import { v1 as uuid } from "uuid";
 
-const getEntries = (): Array<PatientEntry> => {
+const getPatient = (id: string): Patient | undefined => {
+  return patientEntries.find((p) => p.id === id);
+};
+
+const getEntries = (): Array<Patient> => {
   return patientEntries;
 };
 
-const getNonSensitiveEntries = (): Array<NonSensitivePatientEntry> => {
+const getNonSensitiveEntries = (): Array<PublicPatient> => {
   return patientEntries.map(
     ({ id, name, occupation, gender, dateOfBirth }) => ({
       id,
@@ -22,9 +22,10 @@ const getNonSensitiveEntries = (): Array<NonSensitivePatientEntry> => {
   );
 };
 
-const addPatient = (entry: NewPatientEntry): PatientEntry => {
+const addPatient = (entry: NewPatient): Patient => {
   const newPatientEntry = {
     id: uuid(),
+    entries: [],
     ...entry,
   };
 
@@ -32,4 +33,4 @@ const addPatient = (entry: NewPatientEntry): PatientEntry => {
   return newPatientEntry;
 };
 
-export default { getEntries, getNonSensitiveEntries, addPatient };
+export default { getPatient, getEntries, getNonSensitiveEntries, addPatient };
