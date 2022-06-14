@@ -11,7 +11,7 @@ const PatientInformation = () => {
 
   React.useEffect(() => {
     const fetchPatient = async () => {
-      if (id && !patients[id].ssn) {
+      if (id && patients[id] && !patients[id].ssn) {
         try {
           const { data: patientFromApi } = await axios.get<Patient>(
             `${apiBaseUrl}/patients/${id}`
@@ -33,9 +33,25 @@ const PatientInformation = () => {
 
   return (
     <div>
-      <h4>{patient.name}</h4>
-      <div>ssn: {patient.ssn}</div>
-      <div>occupation: {patient.occupation}</div>
+      <h2>{patient?.name}</h2>
+      <div>gender: {patient?.gender}</div>
+      <div>ssn: {patient?.ssn}</div>
+      <div>occupation: {patient?.occupation}</div>
+      <h3>entries</h3>
+      {patient && patient.entries
+        ? patient.entries.map((e) => (
+            <div key={e.id}>
+              {e.date} <em>{e.description}</em>
+              {!e.diagnosisCodes ? null : (
+                <ul>
+                  {e.diagnosisCodes.map((d) => (
+                    <li key={d}>{d}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))
+        : null}
     </div>
   );
 };
