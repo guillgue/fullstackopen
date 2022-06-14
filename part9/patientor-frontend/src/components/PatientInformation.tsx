@@ -7,7 +7,7 @@ import { Patient } from "../types";
 
 const PatientInformation = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const fetchPatient = async () => {
@@ -45,7 +45,9 @@ const PatientInformation = () => {
               {!e.diagnosisCodes ? null : (
                 <ul>
                   {e.diagnosisCodes.map((d) => (
-                    <li key={d}>{d}</li>
+                    <li key={d}>
+                      {d} {diagnoses[d]?.name}
+                    </li>
                   ))}
                 </ul>
               )}
