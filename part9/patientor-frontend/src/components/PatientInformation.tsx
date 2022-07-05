@@ -3,11 +3,38 @@ import { apiBaseUrl } from "./../constants";
 import { useParams } from "react-router-dom";
 import { updatePatient, useStateValue } from "../state";
 import axios from "axios";
-import { Patient } from "../types";
+import { Entry, Patient } from "../types";
+import Hospital from "./Hospital";
+import OccupationalHealthcareEntry from "./OccupationalHealthcareEntry";
+import HealthCheck from "./HealthCheck";
+import { Box } from "@material-ui/core";
+
+/**
+ * Helper function for exhaustive type checking
+ */
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
+const EntryDetails = ({ entry }: { entry: Entry }) => {
+  switch (entry.type) {
+    case "Hospital":
+      return <Hospital entry={entry} />;
+    case "OccupationalHealthcare":
+      return <OccupationalHealthcareEntry entry={entry} />;
+    case "HealthCheck":
+      return <HealthCheck entry={entry} />;
+    default:
+      return assertNever(entry);
+  }
+  return null;
+};
 
 const PatientInformation = () => {
   const { id } = useParams<{ id: string }>();
-  const [{ patients, diagnoses }, dispatch] = useStateValue();
+  const [{ patients }, dispatch] = useStateValue();
 
   React.useEffect(() => {
     const fetchPatient = async () => {
@@ -40,18 +67,9 @@ const PatientInformation = () => {
       <h3>entries</h3>
       {patient && patient.entries
         ? patient.entries.map((e) => (
-            <div key={e.id}>
-              {e.date} <em>{e.description}</em>
-              {!e.diagnosisCodes ? null : (
-                <ul>
-                  {e.diagnosisCodes.map((d) => (
-                    <li key={d}>
-                      {d} {diagnoses[d]?.name}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <Box key={e.id} border={1}>
+              <EntryDetails entry={e} />
+            </Box>
           ))
         : null}
     </div>
